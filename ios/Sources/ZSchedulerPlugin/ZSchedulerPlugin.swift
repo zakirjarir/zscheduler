@@ -1,23 +1,24 @@
 import Foundation
 import Capacitor
 
-/**
- * Please read the Capacitor iOS Plugin Development Guide
- * here: https://capacitorjs.com/docs/plugins/ios
- */
 @objc(ZSchedulerPlugin)
-public class ZSchedulerPlugin: CAPPlugin, CAPBridgedPlugin {
-    public let identifier = "ZSchedulerPlugin"
-    public let jsName = "ZScheduler"
-    public let pluginMethods: [CAPPluginMethod] = [
-        CAPPluginMethod(name: "echo", returnType: CAPPluginReturnPromise)
-    ]
+public class ZSchedulerPlugin: CAPPlugin {
+
     private let implementation = ZScheduler()
 
-    @objc func echo(_ call: CAPPluginCall) {
-        let value = call.getString("value") ?? ""
-        call.resolve([
-            "value": implementation.echo(value)
-        ])
+    @objc func startPeriodic(_ call: CAPPluginCall) {
+        let interval = call.getInt("interval") ?? 1000
+        let eventName = call.getString("eventName") ?? "schedulerEvent"
+
+        implementation.start(interval: interval, eventName: eventName) {
+            self.notifyListeners(eventName, data: nil)
+        }
+
+        call.resolve()
+    }
+
+    @objc func stopPeriodic(_ call: CAPPluginCall) {
+        implementation.stop()
+        call.resolve()
     }
 }

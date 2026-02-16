@@ -6,20 +6,51 @@
     "tags": [],
     "methods": [
       {
-        "name": "echo",
-        "signature": "(options: { value: string; }) => Promise<{ value: string; }>",
+        "name": "startPeriodic",
+        "signature": "(options: { interval: number; eventName: string; }) => Promise<void>",
         "parameters": [
           {
             "name": "options",
             "docs": "",
-            "type": "{ value: string; }"
+            "type": "{ interval: number; eventName: string; }"
           }
         ],
-        "returns": "Promise<{ value: string; }>",
+        "returns": "Promise<void>",
         "tags": [],
         "docs": "",
         "complexTypes": [],
-        "slug": "echo"
+        "slug": "startperiodic"
+      },
+      {
+        "name": "stopPeriodic",
+        "signature": "() => Promise<void>",
+        "parameters": [],
+        "returns": "Promise<void>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "stopperiodic"
+      },
+      {
+        "name": "addListener",
+        "signature": "(eventName: string, listenerFunc: () => void) => Promise<{ remove: () => void; }>",
+        "parameters": [
+          {
+            "name": "eventName",
+            "docs": "",
+            "type": "string"
+          },
+          {
+            "name": "listenerFunc",
+            "docs": "",
+            "type": "() => void"
+          }
+        ],
+        "returns": "Promise<{ remove: () => void; }>",
+        "tags": [],
+        "docs": "",
+        "complexTypes": [],
+        "slug": "addlistenerstring-"
       }
     ],
     "properties": []

@@ -23,21 +23,20 @@ npm install zakirjarir/zscheduler
 npx cap sync
 
 
-<script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 import { ZScheduler } from 'zscheduler';
 
 onMounted(async () => {
-  // Start a periodic task every 30 seconds
   await ZScheduler.startPeriodic({
-    interval: 30000, // in milliseconds
-    eventName: 'myPeriodicEvent'
+    interval: 30000,
+    eventName: 'every30s'
   });
 
-  // Listen for the scheduled event
-  ZScheduler.addListener('myPeriodicEvent', () => {
-    console.log('Periodic event fired!');
-    // Call any JS function here, e.g., show a toast
+  ZScheduler.addListener('every30s', () => {
+    console.log('🔥 30s done');
   });
 });
-</script>
+
+onUnmounted(async () => {
+  await ZScheduler.stopPeriodic();
+});

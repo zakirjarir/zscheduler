@@ -1,7 +1,7 @@
 {
   "name": "zscheduler",
-  "version": "1.0.2",
-  "description": "this is a schedulr",
+  "version": "1.1.0",
+  "description": "this is a scheduler",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",

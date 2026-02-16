@@ -1,5 +1,4 @@
 import { registerPlugin } from '@capacitor/core';
-
 import type { ZSchedulerPlugin } from './definitions';
 
 const ZScheduler = registerPlugin<ZSchedulerPlugin>('ZScheduler', {
