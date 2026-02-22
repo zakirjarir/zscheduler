@@ -1,19 +1,55 @@
 import Foundation
+import Capacitor
+import BackgroundTasks
 
-@objc public class ZScheduler: NSObject {
+@objc(ZScheduler)
+public class ZScheduler: CAPPlugin {
 
-    private var timer: Timer?
+    let taskIdentifier = "com.zscheduler.sync"
 
-    @objc public func start(interval: Int, eventName: String, notify: @escaping () -> Void) {
-        timer?.invalidate()
+    public override func load() {
+        super.load()
+        registerBackgroundTask()
+    }
 
-        timer = Timer.scheduledTimer(withTimeInterval: Double(interval) / 1000.0, repeats: true) { _ in
-            notify()
+    private func registerBackgroundTask() {
+        BGTaskScheduler.shared.register(
+            forTaskWithIdentifier: taskIdentifier,
+            using: nil
+        ) { task in
+            self.handleBackgroundTask(task: task as! BGProcessingTask)
         }
     }
 
-    @objc public func stop() {
-        timer?.invalidate()
-        timer = nil
+    @objc func startPeriodic(_ call: CAPPluginCall) {
+        scheduleTask()
+        call.resolve()
+    }
+
+    private func scheduleTask() {
+
+        let request = BGProcessingTaskRequest(identifier: taskIdentifier)
+        request.requiresNetworkConnectivity = true
+        request.requiresExternalPower = false
+
+        do {
+            try BGTaskScheduler.shared.submit(request)
+        } catch {
+            print("Could not schedule task: \(error)")
+        }
+    }
+
+    private func handleBackgroundTask(task: BGProcessingTask) {
+
+        scheduleTask() // Reschedule next run
+
+        task.expirationHandler = {
+            task.setTaskCompleted(success: false)
+        }
+
+        // 🔥 এখানে sync logic লিখবা
+        notifyListeners("schedulerEvent", data: nil)
+
+        task.setTaskCompleted(success: true)
     }
 }
